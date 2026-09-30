@@ -16,21 +16,20 @@ try {
 }
 }
 
+async function readFileWithDelay(){
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    let products = await readFile();
+    return products;
+}
+
+
 app.get('/products/:id', async (req, res) => {
     try {
-   let products = await  readFile();
-   let {id} = req.params;
-   id = Number(id);
-   let product = products.find(p => p.id === id);
-   if (!product) {
-       return res.status(404).send('Product not found');
-   }
-   console.log(product);
-  res.json(product)
+   let products = await  readFileWithDelay();
+   res.json (products)
     }
     catch (error) {
         console.log(error);
-        res.status(500).send('Internal Server Error');
     }
 });
 
