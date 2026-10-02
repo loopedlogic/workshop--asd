@@ -23,8 +23,14 @@ function clear() {
   entries.clear();
 }
 
+function invalidateProducts() {
+  for (const key of entries.keys()) {
+    if (key === 'products' || key.startsWith('product:')) entries.delete(key);
+  }
+}
+
 function keys() {
   return [...entries.keys()];
 }
 
-module.exports = { get, set, deleteKey, clear, keys, CACHE_TTL };
+module.exports = { get, set, deleteKey, clear, keys, invalidateProducts, CACHE_TTL };

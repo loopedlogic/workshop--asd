@@ -18,4 +18,16 @@ async function getProductById(id) {
   return products.find((product) => product.id === numericId) || null;
 }
 
-module.exports = { getProducts, getProductById };
+async function createProduct(product) {
+  return productDatabase.create(product);
+}
+
+async function updateProduct(id, changes, options) {
+  return productDatabase.update(id, changes, options);
+}
+
+async function deleteProduct(id) {
+  return productDatabase.remove(id);
+}
+
+module.exports = { getProducts, getProductById, createProduct, updateProduct, deleteProduct };
