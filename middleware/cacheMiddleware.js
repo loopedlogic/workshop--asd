@@ -1,19 +1,16 @@
-const cache = require('./productCache');
+const { createCache } = require('express-cache-toolkit');
 
-function cacheResponse(keyFromRequest) {
-  return function productResponseCache(req, res, next) {
-    const key = keyFromRequest(req);
-    const entry = cache.get(key);
+const ttlMs = process.env.PRODUCT_CACHE_TTL_MS === undefined
+  ? 60_000
+  : Number(process.env.PRODUCT_CACHE_TTL_MS);
+const cache = createCache({ ttlMs, maxEntries: 500 });
 
-    if (entry) {
-      res.set('X-Cache', 'HIT');
-      return res.json(entry.data);
-    }
-
-    res.set('X-Cache', 'MISS');
-    res.locals.cacheKey = key;
-    return next();
-  };
+function cacheResponse(keyGenerator) {
+  return cache.middleware({ keyGenerator, tags: ['products'] });
 }
 
-module.exports = { cacheResponse };
+function invalidateProducts() {
+  return cache.invalidateTag('products');
+}
+
+module.exports = { cacheResponse, invalidateProducts, cache };
