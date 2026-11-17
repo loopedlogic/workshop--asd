@@ -1,6 +1,8 @@
 const productDatabase = require('../database/productDatabase');
 
-const READ_DELAY_MS = 1500;
+const READ_DELAY_MS = process.env.PRODUCT_READ_DELAY_MS === undefined
+  ? 1500
+  : Number(process.env.PRODUCT_READ_DELAY_MS);
 
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
